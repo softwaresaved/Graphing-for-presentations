@@ -52,23 +52,31 @@ def plot_bar_matplot(df, current_chart):
     filename = plot_details[current_chart][0]
     y_axis_name = plot_details[current_chart][1]
     x_axis_label = plot_details[current_chart][2]
-    y_axis_label = plot_details[current_chart][3]
-    chart_title = plot_details[current_chart][4]
-    show_values = plot_details[current_chart][5]
+    x_axis_label_rotation = plot_details[current_chart][3]
+    x_axis_label_cutoff = plot_details[current_chart][4]
+    y_axis_label = plot_details[current_chart][5]
+    chart_title = plot_details[current_chart][6]
+    show_values = plot_details[current_chart][7]
+    bottom_size = plot_details[current_chart][8]
+    title_size = plot_details[current_chart][9]
+    body_size = plot_details[current_chart][10]
+    label_size = plot_details[current_chart][11]
 
     # Set the labels
     labels = df.index
+
     # If labels are long, wrap 'em
-    labels = [ '\n'.join(wrap(l, 15)) for l in labels ] # Change the number to change the max number of characters per line
+    labels = [ '\n'.join(wrap(l, x_axis_label_cutoff)) for l in labels ] # Change the number to change the max number of characters per line
 
     # Now plot
-    fig = df[y_axis_name].plot(kind='bar',    # Plot a bar chart
-                legend=False,    # Turn the Legend off
-                width=0.75,      # Set bar width as 75% of space available
+    fig = df[y_axis_name].plot(kind='bar',                      # Plot a bar chart
+                legend=False,                                   # Turn the Legend off
+                width=0.75,                                     # Set bar width as 75% of space available
                 figsize=(global_specs['plot_width'],global_specs['plot_height']),  # Set size of plot in inches
-                color=[plt.cm.Paired(np.arange(len(df)))])
+                color=[plt.cm.Paired(np.arange(len(df)))])      # cm is colormap, 'Paired' is the set of colours I chose
+                                                                # the last bit creates a range and matches it to the Paired colour range
 
-    # Add labels to the bars. This is way more complicated than it needs to be
+    # Add labels to the bars
     if show_values == True:
         for p in fig.patches:
             fig.annotate(str(int(round(p.get_height(),0))) + percent_symbol,     # Get the height of the bar and round it to a nice looking value
@@ -78,17 +86,17 @@ def plot_bar_matplot(df, current_chart):
              xytext=(0, 12),                               # Change these to move the text positioning to suit
              textcoords='offset points',                   # Dunno what this does
              fontname=global_specs['font_name'],           # Set font
-             fontsize=global_specs['title_size'])           # Set font size
+             fontsize=label_size)           # Set font size
 
-    plt.title(chart_title, fontname=global_specs['font_name'], fontsize=global_specs['title_size'])
+    if chart_title != False:
+        plt.title(chart_title, fontname=global_specs['font_name'], fontsize=title_size)
 
     # Make plot scale to fit plot area
     plt.tight_layout()
     
-
-#    plt.figure(figsize=(global_specs['plot_width'], global_specs['plot_height'])) 
-    # Use bespoke labels, and rotate them so they're horizontal
-    fig.set_xticklabels(labels, rotation=0, fontname=global_specs['font_name'], fontsize=global_specs['body_size'])
+    # Use the bespoke labels, and rotate them if necessary
+    
+    fig.set_xticklabels(labels, rotation=x_axis_label_rotation, fontname=global_specs['font_name'], fontsize=body_size)
 
     # Turn off the spines
     fig.spines['left'].set_visible(False)
@@ -96,7 +104,7 @@ def plot_bar_matplot(df, current_chart):
     fig.spines['top'].set_visible(False)
 
     # Read in the axis classes that may be used in the following
-    # if statements
+    # if statements to set axis-related stuff
     x_axe_class = fig.axes.get_xaxis()
     y_axe_class = fig.axes.get_yaxis()
 
@@ -108,21 +116,23 @@ def plot_bar_matplot(df, current_chart):
 
     # Y axis title
     if y_axis_label == False:
-        y_axe_class.label.set_visible(False)    #Turn off x axis title
+        y_axe_class.label.set_visible(False)    #Turn off y axis title
     else:
         fig.set_ylabel(y_axis_label)
 
-    # Remove the y-axis line
-    y_axe_class.set_visible(False)    #Turn off y axis line
+    # Remove the y-axis stuff
+    y_axe_class.set_visible(False)  
 
-    # Make gap at bottom bigger for labels (it's a fraction, not a measurement)
-    plt.subplots_adjust(bottom=0.15)
+    # Make gap at bottom bigger for labels
+    plt.subplots_adjust(bottom=bottom_size)
     
     # Save the figure
     plt.savefig(STOREFILENAME + current_chart + '.png', format = 'png', dpi = 300)
 
     # Show the figure
     plt.show()
+    # Clear figure so that parameters can be set clean by next figure
+    plt.clf()
 
     return
     
@@ -132,16 +142,15 @@ def main():
     Main function to run program
     """
     
-    # Get the chart params from the lookup table
-    
+    # Go through all charts in the lookup table
     for current_chart in plot_details:
+        # Get the current chart name
         filename = plot_details[current_chart][0]
         # Read survey data from csv
         df = import_csv_to_df(DATASTORE + filename)
         # Set the first column as the index
         df.set_index('answers', inplace=True)
-
-        # Plot stuff
+        # Plot
         plot_bar_matplot(df, current_chart)
 
 if __name__ == '__main__':
