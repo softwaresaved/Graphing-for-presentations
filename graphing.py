@@ -93,10 +93,11 @@ def plot_bar_matplot(df, current_chart):
 
     # Make plot scale to fit plot area
     plt.tight_layout()
-    
+
     # Use the bespoke labels, and rotate them if necessary
     
     fig.set_xticklabels(labels, rotation=x_axis_label_rotation, fontname=global_specs['font_name'], fontsize=body_size)
+
 
     # Turn off the spines
     fig.spines['left'].set_visible(False)
