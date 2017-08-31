@@ -57,16 +57,24 @@ def plot_bar_matplot(df, current_chart):
     y_axis_label = plot_details[current_chart][5]
     chart_title = plot_details[current_chart][6]
     show_values = plot_details[current_chart][7]
-    bottom_size = plot_details[current_chart][8]
-    title_size = plot_details[current_chart][9]
-    body_size = plot_details[current_chart][10]
-    label_size = plot_details[current_chart][11]
+    skip_labels = plot_details[current_chart][8]
+    bottom_size = plot_details[current_chart][9]
+    title_size = plot_details[current_chart][10]
+    body_size = plot_details[current_chart][11]
+    label_size = plot_details[current_chart][12]
 
     # Set the labels
     labels = df.index
 
     # If labels are long, wrap 'em
     labels = [ '\n'.join(wrap(l, x_axis_label_cutoff)) for l in labels ] # Change the number to change the max number of characters per line
+
+    if skip_labels != False:
+        count = 0
+        for x in range(0,len(labels)):
+            if count%(skip_labels+1) != 0:
+                labels[count]=''
+            count+=1
 
     # Now plot
     fig = df[y_axis_name].plot(kind='bar',                      # Plot a bar chart
@@ -89,7 +97,8 @@ def plot_bar_matplot(df, current_chart):
              fontsize=label_size)           # Set font size
 
     if chart_title != False:
-        plt.title(chart_title, fontname=global_specs['font_name'], fontsize=title_size)
+        plt.title(chart_title, fontname=global_specs['font_name'], fontsize=title_size, y=1.08)  # y increases the spacing between the title and
+                                                                                                 #plot content
 
     # Make plot scale to fit plot area
     plt.tight_layout()
