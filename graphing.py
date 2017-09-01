@@ -13,7 +13,7 @@ import seaborn as sns
 
 from textwrap import wrap
 
-from chart_details_lookup import single_plot_details
+from chart_details_lookup import plot_details
 from chart_details_lookup import global_specs
 
 DATASTORE = './data/'
@@ -26,8 +26,6 @@ mpl.rc('font',family='Serif')
 #names = [matplotlib.font_manager.FontProperties(fname=fname).get_name() for fname in flist]
 #names.sort()
 #print(names)
-
-
 
 
 def import_csv_to_df(filename):
@@ -47,50 +45,37 @@ def plot_bar_matplot(df, current_chart):
     :return: A list of saved charts
     """
 
-    percent_symbol = '%'
+    # To cut down on verbosity, rename the look_up dictionary
+    current_plot = plot_details[current_chart]
 
-    # Get the chart params from the lookup table
-    filename = single_plot_details[current_chart][1]
-    y1_axis_name = single_plot_details[current_chart][2]
-    y2_axis_name = single_plot_details[current_chart][3]
-    x_axis_label = single_plot_details[current_chart][4]
-    x_axis_label_rotation = single_plot_details[current_chart][5]
-    x_axis_label_cutoff = single_plot_details[current_chart][6]
-    y_axis_label = single_plot_details[current_chart][7]
-    chart_title = single_plot_details[current_chart][8]
-    show_values = single_plot_details[current_chart][9]
-    skip_labels = single_plot_details[current_chart][10]
-    bottom_size = single_plot_details[current_chart][11]
-    title_size = single_plot_details[current_chart][12]
-    body_size = single_plot_details[current_chart][13]
-    label_size = single_plot_details[current_chart][14]
+    percent_symbol = '%'
 
     # Set the labels
     labels = df.index
 
     # If labels are long, wrap 'em
-    labels = [ '\n'.join(wrap(l, x_axis_label_cutoff)) for l in labels ] # Change the number to change the max number of characters per line
+    labels = [ '\n'.join(wrap(l, current_plot['x_max_len'])) for l in labels ] # Change the number to change the max number of characters per line
 
     # Soemtimes there are simply too many x-labels. Based on a parameter
     # from the lookup table, this removes some labels to give the others roo
-    if skip_labels != False:
+    if current_plot['skip_labels'] != False:
         count = 0
         for x in range(0,len(labels)):
-            if count%(skip_labels+1) != 0:
+            if count%(current_plot['skip_labels']+1) != 0:
                 labels[count]=''
             count+=1
 
     # This sets parameters to ensure that charts look good with one
     # set of bars or two sets of bars
-    if y2_axis_name == False:
-        y_values = [y1_axis_name]
+    if current_plot['y2_axis'] == False:
+        y_values = [current_plot['y1_axis']]
         colourmap = [plt.cm.Paired(np.arange(len(df)))]
         legend_or_not = False
     else:
-        y_values = [y1_axis_name, y2_axis_name]
+        y_values = [current_plot['y1_axis'], current_plot['y2_axis']]
         colourmap = [plt.cm.Spectral(np.arange(len(df))), plt.cm.coolwarm(np.arange(len(df)))]
         legend_or_not = True
-        mpl.rcParams['legend.fontsize'] = label_size 
+        mpl.rcParams['legend.fontsize'] = current_plot['value_font_size'] 
 
         
     # Now plot
@@ -103,7 +88,7 @@ def plot_bar_matplot(df, current_chart):
 
 
     # Add labels to the bars
-    if show_values == True:
+    if current_plot['show_values'] == True:
         for p in fig.patches:
             fig.annotate(str(int(round(p.get_height(),0))) + percent_symbol,     # Get the height of the bar and round it to a nice looking value
              (p.get_x()+p.get_width()/2, p.get_height()),  # Locate the mid point of the bar and it's height
@@ -111,17 +96,17 @@ def plot_bar_matplot(df, current_chart):
              va='center',                                  # ...and the centre of the vertical coord
              xytext=(4, 12),                               # Change these to move the text positioning to suit
              textcoords='offset points',                   # Dunno what this does
-             fontsize=label_size)           # Set font size
+             fontsize=current_plot['value_font_size'])           # Set font size
 
-    if chart_title != False:
-        plt.title(chart_title, fontsize=title_size, y=1.08)  # y increases the spacing between the title
+    if current_plot['chart_title'] != False:
+        plt.title(current_plot['chart_title'], fontsize=current_plot['title_font_size'], y=1.08)  # y increases the spacing between the title
                                                                                                  # and plot content
 
     # Make plot scale to fit plot area
     plt.tight_layout()
 
     # Use the bespoke labels, and rotate them if necessary
-    fig.set_xticklabels(labels, rotation=x_axis_label_rotation, fontsize=body_size)
+    fig.set_xticklabels(labels, rotation=current_plot['x_rot'], fontsize=current_plot['axis_font_size'])
 
     # Turn off the spines
     fig.spines['left'].set_visible(False)
@@ -134,22 +119,22 @@ def plot_bar_matplot(df, current_chart):
     y_axe_class = fig.axes.get_yaxis()
 
     # X axis title
-    if x_axis_label == False:
+    if current_plot['x_title'] == False:
         x_axe_class.label.set_visible(False)    #Turn off x axis title
     else:
-        fig.set_xlabel(x_axis_label)
+        fig.set_xlabel(current_plot['x_title'])
 
     # Y axis title
-    if y_axis_label == False:
+    if current_plot['y_title'] == False:
         y_axe_class.label.set_visible(False)    #Turn off y axis title
     else:
-        fig.set_ylabel(y_axis_label)
+        fig.set_ylabel(current_plot['y_title'])
 
     # Remove the y-axis stuff
     y_axe_class.set_visible(False)  
 
     # Make gap at bottom bigger for labels
-    plt.subplots_adjust(bottom=bottom_size)
+    plt.subplots_adjust(bottom=current_plot['bottom_size'])
     
     # Save the figure
     plt.savefig(STOREFILENAME + current_chart + '.png', format = 'png', dpi = 300)
@@ -170,41 +155,25 @@ def plot_line_matplot(df, current_chart):
     :params: a dict of dataframe, the imported plot details
     :return: A list of saved charts
     """
-    
-    filename = single_plot_details[current_chart][1]
-    y1_axis_name = single_plot_details[current_chart][2]
-    y2_axis_name = single_plot_details[current_chart][3]
-    x_axis_label = single_plot_details[current_chart][4]
-    x_axis_label_rotation = single_plot_details[current_chart][5]
-    x_axis_label_cutoff = single_plot_details[current_chart][6]
-    y_axis_label = single_plot_details[current_chart][7]
-    chart_title = single_plot_details[current_chart][8]
-    show_values = single_plot_details[current_chart][9]
-    skip_labels = single_plot_details[current_chart][10]
-    bottom_size = single_plot_details[current_chart][11]
-    title_size = single_plot_details[current_chart][12]
-    body_size = single_plot_details[current_chart][13]
-    label_size = single_plot_details[current_chart][14]
-
 
     # Set the labels
     labels = df.index
 
     # If labels are long, wrap 'em
-    labels = [ '\n'.join(wrap(l, x_axis_label_cutoff)) for l in labels ] # Change the number to change the max number of characters per line
+    labels = [ '\n'.join(wrap(l, current_plot['x_max_len'])) for l in labels ] # Change the number to change the max number of characters per line
 
     # Set x and y ticks
     x_tick_values = range(0,len(df))
-    y_tick_values = range(0,int(df[y1_axis_name].max()),20)
+    y_tick_values = range(0,int(df[current_plot['y1_axis']].max()),20)
 
-    if skip_labels != False:
+    if current_plot['skip_labels'] != False:
         count = 0
         for x in range(0,len(labels)):
-            if count%(skip_labels+1) != 0:
+            if count%(current_plot['skip_labels']+1) != 0:
                 labels[count]=''
             count+=1
     
-    fig = df[y1_axis_name].plot(kind='line',                      # Plot a bar chart
+    fig = df[current_plot['y1_axis']].plot(kind='line',                      # Plot a bar chart
                 legend=False,                                   # Turn the Legend off
                 xticks = x_tick_values,
                 yticks = y_tick_values,
@@ -212,15 +181,15 @@ def plot_line_matplot(df, current_chart):
 
     fig.line.set_linewidth(8)
 
-    if chart_title != False:
-        plt.title(chart_title, fontsize=title_size, y=1.08)  # y increases the spacing between the title and plot content
+    if current_plot['chart_title'] != False:
+        plt.title(current_plot['chart_title'], fontsize=current_plot['title_font_size'], y=1.08)  # y increases the spacing between the title and plot content
 
     # Make plot scale to fit plot area
     plt.tight_layout()
 
     # Use the bespoke labels, and rotate them if necessary
-    fig.set_xticklabels(labels, rotation=x_axis_label_rotation, fontsize=body_size)
-    fig.set_yticklabels(y_tick_values, fontsize=body_size)
+    fig.set_xticklabels(labels, rotation=current_plot['x_rot'], fontsize=current_plot['axis_font_size'])
+    fig.set_yticklabels(y_tick_values, fontsize=current_plot['axis_font_size'])
 
     # Turn off the spines
     fig.spines['left'].set_visible(False)
@@ -233,22 +202,22 @@ def plot_line_matplot(df, current_chart):
     y_axe_class = fig.axes.get_yaxis()
 
     # X axis title
-    if x_axis_label == False:
+    if current_plot['x_title'] == False:
         x_axe_class.label.set_visible(False)    #Turn off x axis title
     else:
-        fig.set_xlabel(x_axis_label)
+        fig.set_xlabel(current_plot['x_title'])
 
     # Y axis title
-    if y_axis_label == False:
+    if current_plot['y_title'] == False:
         y_axe_class.label.set_visible(False)    #Turn off y axis title
     else:
-        fig.set_ylabel(y_axis_label, fontsize=body_size)
+        fig.set_ylabel(current_plot['y_title'], fontsize=current_plot['axis_font_size'])
 
     # Remove the y-axis stuff
     y_axe_class.set_visible(True)  
 
     # Make gap at bottom bigger for labels
-    plt.subplots_adjust(bottom=bottom_size)
+    plt.subplots_adjust(bottom=current_plot['bottom_size'])
 
     # Show the figure
     plt.show()
@@ -264,15 +233,13 @@ def main():
     """
     
     # Go through all charts in the lookup table
-    for current_chart in single_plot_details:
-        # Get the current chart name
-        filename = single_plot_details[current_chart][1]
-        # Read survey data from csv
-        df = import_csv_to_df(DATASTORE + filename)
+    for current_chart in plot_details:
+        # Read survey data for current chart from csv
+        df = import_csv_to_df(DATASTORE + plot_details[current_chart]['filename'])
         # Set the first column as the index
         df.set_index('answers', inplace=True)
         # Plot
-        if single_plot_details[current_chart][0] == 'line':
+        if plot_details[current_chart]['plot_type'] == 'line':
             plot_line_matplot(df, current_chart)
         else:
             plot_bar_matplot(df, current_chart)
