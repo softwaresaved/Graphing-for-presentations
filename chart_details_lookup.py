@@ -46,7 +46,7 @@ plot_details = {
 #    'stability1':['bar', 'stability1.csv', 'percentage', False, 0, 15, 'Percentage', 'Bus factor', True, False, 0.15,  24, 14, 20],
 #    'stability2':['bar', 'stability2.csv', 'percentage', False, 0, 15, 'Percentage', 'Technical handover plan?', True, False, 0.15,  24, 14, 20],
 #    'stability3':['bar', 'stability3.csv', 'percentage', False, 0, 15, 'Percentage', 'Have you released under Open Source?', True, False, 0.15,  24, 14, 20]
-    'socio3':['line', 'socio3.csv', 'percentage', False, 45, 10, 'Percentage', 'Age', True, False, 0.2,  24, 14, 20],
+    'socio3':['line', 'socio3.csv', 'percentage', False, 0, 10, 'Percentage', 'Age', True, False, 0.2,  24, 14, 20],
 #    'socio2':['bar', 'socio2.csv', 'percentage', False, 0, 15, 'Percentage', 'Gender', True, False, 0.15,  24, 14, 20],
 #    'socio5':['bar', 'socio5.csv', 'percentage', False, 45, 15, 'Percentage', 'Ethnic origin', True, False, 0.3,  24, 14, 20],
     }

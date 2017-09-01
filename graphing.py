@@ -173,6 +173,10 @@ def plot_line_matplot(df, current_chart):
     # If labels are long, wrap 'em
     labels = [ '\n'.join(wrap(l, x_axis_label_cutoff)) for l in labels ] # Change the number to change the max number of characters per line
 
+    # Set x and y ticks
+    x_tick_values = range(0,len(df))
+    y_tick_values = range(0,int(df[y_axis_name].max()),20)
+
     if skip_labels != False:
         count = 0
         for x in range(0,len(labels)):
@@ -182,23 +186,24 @@ def plot_line_matplot(df, current_chart):
     
     fig = df[y_axis_name].plot(kind='line',                      # Plot a bar chart
                 legend=False,                                   # Turn the Legend off
-                xticks = range(0,len(df)),
+                xticks = x_tick_values,
+                yticks = y_tick_values,
                 figsize=(global_specs['plot_width'],global_specs['plot_height']))
 
+    fig.line.set_linewidth(8)
+
     if chart_title != False:
-        plt.title(chart_title, fontname=global_specs['font_name'], fontsize=title_size, y=1.08)  # y increases the spacing between the title
-                                                                                                 # and plot content
+        plt.title(chart_title, fontname=global_specs['font_name'], fontsize=title_size, y=1.08)  # y increases the spacing between the title and plot content
 
     # Make plot scale to fit plot area
     plt.tight_layout()
 
-
-
-
     # Use the bespoke labels, and rotate them if necessary
     fig.set_xticklabels(labels, rotation=x_axis_label_rotation, fontname=global_specs['font_name'], fontsize=body_size)
+    fig.set_yticklabels(y_tick_values, fontname=global_specs['font_name'], fontsize=body_size)
 
     # Turn off the spines
+    fig.spines['left'].set_visible(False)
     fig.spines['right'].set_visible(False)
     fig.spines['top'].set_visible(False)
 
@@ -217,16 +222,13 @@ def plot_line_matplot(df, current_chart):
     if y_axis_label == False:
         y_axe_class.label.set_visible(False)    #Turn off y axis title
     else:
-        fig.set_ylabel(y_axis_label)
+        fig.set_ylabel(y_axis_label, fontname=global_specs['font_name'], fontsize=body_size)
 
     # Remove the y-axis stuff
     y_axe_class.set_visible(True)  
 
     # Make gap at bottom bigger for labels
     plt.subplots_adjust(bottom=bottom_size)
-
-
-
 
     # Show the figure
     plt.show()
