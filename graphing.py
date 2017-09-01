@@ -19,6 +19,8 @@ from chart_details_lookup import global_specs
 DATASTORE = './data/'
 STOREFILENAME = './output/'
 
+mpl.rc('font',family='Serif')
+
 # If you want to know what fonts are available, uncomment the following four lines
 #flist = matplotlib.font_manager.get_fontconfig_fonts()
 #names = [matplotlib.font_manager.FontProperties(fname=fname).get_name() for fname in flist]
@@ -69,6 +71,8 @@ def plot_bar_matplot(df, current_chart):
     # If labels are long, wrap 'em
     labels = [ '\n'.join(wrap(l, x_axis_label_cutoff)) for l in labels ] # Change the number to change the max number of characters per line
 
+    # Soemtimes there are simply too many x-labels. Based on a parameter
+    # from the lookup table, this removes some labels to give the others roo
     if skip_labels != False:
         count = 0
         for x in range(0,len(labels)):
@@ -76,14 +80,18 @@ def plot_bar_matplot(df, current_chart):
                 labels[count]=''
             count+=1
 
-    if y2_axis_name != False:
-        y_values = [y1_axis_name, y2_axis_name]
-        colourmap = [plt.cm.Spectral(np.arange(len(df))), plt.cm.coolwarm(np.arange(len(df)))]
-        legend_or_not = True
-    else:
+    # This sets parameters to ensure that charts look good with one
+    # set of bars or two sets of bars
+    if y2_axis_name == False:
         y_values = [y1_axis_name]
         colourmap = [plt.cm.Paired(np.arange(len(df)))]
         legend_or_not = False
+    else:
+        y_values = [y1_axis_name, y2_axis_name]
+        colourmap = [plt.cm.Spectral(np.arange(len(df))), plt.cm.coolwarm(np.arange(len(df)))]
+        legend_or_not = True
+        mpl.rcParams['legend.fontsize'] = label_size 
+
         
     # Now plot
     fig = df.plot(kind='bar',                      # Plot a bar chart
@@ -103,18 +111,17 @@ def plot_bar_matplot(df, current_chart):
              va='center',                                  # ...and the centre of the vertical coord
              xytext=(4, 12),                               # Change these to move the text positioning to suit
              textcoords='offset points',                   # Dunno what this does
-             fontname=global_specs['font_name'],           # Set font
              fontsize=label_size)           # Set font size
 
     if chart_title != False:
-        plt.title(chart_title, fontname=global_specs['font_name'], fontsize=title_size, y=1.08)  # y increases the spacing between the title
+        plt.title(chart_title, fontsize=title_size, y=1.08)  # y increases the spacing between the title
                                                                                                  # and plot content
 
     # Make plot scale to fit plot area
     plt.tight_layout()
 
     # Use the bespoke labels, and rotate them if necessary
-    fig.set_xticklabels(labels, rotation=x_axis_label_rotation, fontname=global_specs['font_name'], fontsize=body_size)
+    fig.set_xticklabels(labels, rotation=x_axis_label_rotation, fontsize=body_size)
 
     # Turn off the spines
     fig.spines['left'].set_visible(False)
@@ -206,14 +213,14 @@ def plot_line_matplot(df, current_chart):
     fig.line.set_linewidth(8)
 
     if chart_title != False:
-        plt.title(chart_title, fontname=global_specs['font_name'], fontsize=title_size, y=1.08)  # y increases the spacing between the title and plot content
+        plt.title(chart_title, fontsize=title_size, y=1.08)  # y increases the spacing between the title and plot content
 
     # Make plot scale to fit plot area
     plt.tight_layout()
 
     # Use the bespoke labels, and rotate them if necessary
-    fig.set_xticklabels(labels, rotation=x_axis_label_rotation, fontname=global_specs['font_name'], fontsize=body_size)
-    fig.set_yticklabels(y_tick_values, fontname=global_specs['font_name'], fontsize=body_size)
+    fig.set_xticklabels(labels, rotation=x_axis_label_rotation, fontsize=body_size)
+    fig.set_yticklabels(y_tick_values, fontsize=body_size)
 
     # Turn off the spines
     fig.spines['left'].set_visible(False)
@@ -235,7 +242,7 @@ def plot_line_matplot(df, current_chart):
     if y_axis_label == False:
         y_axe_class.label.set_visible(False)    #Turn off y axis title
     else:
-        fig.set_ylabel(y_axis_label, fontname=global_specs['font_name'], fontsize=body_size)
+        fig.set_ylabel(y_axis_label, fontsize=body_size)
 
     # Remove the y-axis stuff
     y_axe_class.set_visible(True)  
