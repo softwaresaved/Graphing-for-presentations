@@ -56,7 +56,7 @@ Prepare for running Python:
 ### Create charts
 
 1. If you want to see the charts as they are created, open ```python graphing.py``` and uncomment the following line:
- * #    plt.show()
+ * ```#    plt.show()```
  * Note: you will now have to close each chart after it's opened by the script
 1. Run the script:
  * ```python graphing.py```
