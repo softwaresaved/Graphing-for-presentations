@@ -1,6 +1,5 @@
-answers,percentage
-White,91.44981413
-Asian/Asian British,4.089219331
-Other Ethnic group,2.230483271
-Mixed/ Multiple Ethnic groups,1.486988848
-Black/African/Caribbean/Black British,0.743494424
+answers,RSEs,Research community
+White,91.44981413,86.06519048
+Asian/Asian British,4.089219331,8.670059139
+Other (including mixed ethnic),3.717472119,3.60610645
+Black/African/Caribbean/Black British,0.743494424,1.658643928

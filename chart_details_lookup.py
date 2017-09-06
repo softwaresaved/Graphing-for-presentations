@@ -8,6 +8,7 @@ global_specs sets up some global variables for the plots
 global_specs = {
     'plot_width': 8,
     'plot_height': 5.8,
+    'dpi': 300,
     'font_name': 'Serif'
     }
 
@@ -55,11 +56,11 @@ plot_details = {
             'y1_axis': 'percentage',
             'y2_axis': False,
             'x_title': False,
-            'x_rot': 45,
+            'x_rot': 90,
             'x_max_len': 15,
             'y_title': 'Percentage',
             'chart_title': 'Education background',
-            'show_values': True,
+            'show_values': False,
             'skip_labels': False,
             'bottom_size': 0.3,
             'title_font_size': 24,
@@ -219,8 +220,8 @@ plot_details = {
             'axis_font_size': 14,
             'value_font_size': 20
             },
-    'paper1p2': {
-            'filename': 'paper1p2.csv',
+    'paper2': {
+            'filename': 'paper2.csv',
             'plot_type': 'bar',
             'y1_axis': 'percentage',
             'y2_axis': False,
@@ -341,8 +342,8 @@ plot_details = {
     'socio2': {
             'filename': 'socio2.csv',
             'plot_type': 'bar',
-            'y1_axis': 'percentage',
-            'y2_axis': False,
+            'y1_axis': 'RSEs',
+            'y2_axis': 'Research community',
             'x_title': False,
             'x_rot': 0,
             'x_max_len': 15,
@@ -358,8 +359,8 @@ plot_details = {
     'socio5': {
             'filename': 'socio5.csv',
             'plot_type': 'bar',
-            'y1_axis': 'percentage',
-            'y2_axis': False,
+            'y1_axis': 'RSEs',
+            'y2_axis': 'Research community',
             'x_title': False,
             'x_rot': 45,
             'x_max_len': 15,
@@ -368,6 +369,40 @@ plot_details = {
             'show_values': True,
             'skip_labels': False,
             'bottom_size': 0.3,
+            'title_font_size': 24,
+            'axis_font_size': 14,
+            'value_font_size': 20
+             },
+    'tool4can': {
+            'filename': 'tool4can.csv',
+            'plot_type': 'bar',
+            'y1_axis': 'percentage',
+            'y2_axis': False,
+            'x_title': False,
+            'x_rot': 45,
+            'x_max_len': 15,
+            'y_title': 'Percentage',
+            'chart_title': 'Which languages do you use at work?',
+            'show_values': True,
+            'skip_labels': False,
+            'bottom_size': 0.3,
+            'title_font_size': 24,
+            'axis_font_size': 14,
+            'value_font_size': 20
+             },
+    'tool2': {
+            'filename': 'tool2.csv',
+            'plot_type': 'bar',
+            'y1_axis': 'percentage',
+            'y2_axis': False,
+            'x_title': False,
+            'x_rot': 0,
+            'x_max_len': 15,
+            'y_title': 'Percentage',
+            'chart_title': 'Which OS do you use at work?',
+            'show_values': True,
+            'skip_labels': False,
+            'bottom_size': 0.15,
             'title_font_size': 24,
             'axis_font_size': 14,
             'value_font_size': 20

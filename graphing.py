@@ -9,7 +9,6 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.font_manager
 import math
-import seaborn as sns
 
 from textwrap import wrap
 
@@ -137,12 +136,12 @@ def plot_bar_matplot(df, current_chart):
     plt.subplots_adjust(bottom=current_plot['bottom_size'])
     
     # Save the figure
-    plt.savefig(STOREFILENAME + current_chart + '.png', format = 'png', dpi = 300)
+    plt.savefig(STOREFILENAME + current_chart + '.png', format = 'png', dpi = global_specs['dpi'])
 
     # Show the figure
-    plt.show()
+#    plt.show()
     # Clear figure so that parameters can be set clean by next figure
-    plt.clf()
+    plt.close()
 
     return
 
@@ -238,6 +237,7 @@ def main():
         df = import_csv_to_df(DATASTORE + plot_details[current_chart]['filename'])
         # Set the first column as the index
         df.set_index('answers', inplace=True)
+        print('Currently working on: ' + current_chart)
         # Plot
         if plot_details[current_chart]['plot_type'] == 'line':
             plot_line_matplot(df, current_chart)
