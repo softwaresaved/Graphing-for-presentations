@@ -1,66 +1,1 @@
-answers,percentage
-Computer Science,60.4743083
-Biological Sciences,45.05928854
-Physics and Astronomy,41.10671937
-Mathematics,20.55335968
-Geography & Environmental Sciences,20.55335968
-Chemistry,17.39130435
-Medicine,16.60079051
-Electrical & Electronic Engineering,10.27667984
-Mechanical Engineering,9.881422925
-Materials Technology,7.90513834
-General Engineering,7.90513834
-Education,7.114624506
-Chemical Engineering,5.928853755
-Civil Engineering,5.533596838
-Geology,5.533596838
-Linguistics,5.533596838
-Librarianship & Information Management,5.138339921
-Aeronautical & Manufacturing Engineering,5.138339921
-Psychology,5.138339921
-Robotics,4.347826087
-Anatomy & Physiology,4.347826087
-Agriculture & Forestry,3.95256917
-History,3.95256917
-Sociology,3.95256917
-Business & Management Studies,3.95256917
-Economics,3.557312253
-Social Policy,3.162055336
-Architecture,3.162055336
-Classics & Ancient History,3.162055336
-Art & Design,2.371541502
-Pharmacology & Pharmacy,2.371541502
-Anthropology,2.371541502
-Middle Eastern and African Studies,1.976284585
-Communication & Media Studies,1.976284585
-English,1.581027668
-Food Science,1.581027668
-Ophthalmics,1.581027668
-Theology & Religious Studies,1.581027668
-Town & Country Planning and Landscape Design,1.581027668
-Nursing,1.185770751
-Law,1.185770751
-"History of Art, Architecture & Design",1.185770751
-Philosophy,0.790513834
-Politics,0.790513834
-Accounting & Finance,0.790513834
-Land & Property Management,0.790513834
-American Studies,0.790513834
-German,0.790513834
-Counselling,0.790513834
-Marketing,0.395256917
-Criminology,0.395256917
-Veterinary Medicine,0.395256917
-Complementary Medicine,0.395256917
-Sports Science,0.395256917
-Social Work,0.395256917
-Dentistry,0.395256917
-Music,0.395256917
-East & South Asian Studies,0.395256917
-Fashion,0.395256917
-Physiotherapy,0.395256917
-French,0.395256917
-"Hospitality, Leisure, Recreation & Tourism",0.395256917
-Iberian Languages/Hispanic Studies,0.395256917
-Youth Work,0.395256917
-Russian & East European Languages,0
+﻿answers,percentageComputer Science,14.66Biological Sciences,11.39Physics and Astronomy,10.47Mathematics,5.5Chemistry,5.1Medicine,4.84Geography & Environmental Sciences,4.45Electrical & Electronic Engineering,3.27Mechanical Engineering,3.14General Engineering,2.62Materials Technology,2.23Education,1.96Psychology,1.57Chemical Engineering,1.57Civil Engineering,1.57Aeronautical & Manufacturing Engineering,1.44Geology,1.44Linguistics,1.44Anatomy & Physiology,1.44Librarianship & Information Management,1.18Robotics,1.18History,1.05Architecture,1.05Sociology,1.05Economics,1.05Classics & Ancient History,0.92Social Policy,0.92Business & Management Studies,0.92Pharmacology & Pharmacy,0.79Agriculture & Forestry,0.79Middle Eastern and African Studies,0.65Anthropology,0.65Ophthalmics,0.52Food Science,0.52Theology & Religious Studies,0.52Town & Country Planning and Landscape Design,0.52Communication & Media Studies,0.52Art & Design,0.52"History of Art, Architecture & Design",0.39Law,0.39Nursing,0.39Politics,0.26Land & Property Management,0.26Philosophy,0.26English,0.26Physiotherapy,0.13Social Work,0.13Sports Science,0.13Veterinary Medicine,0.13Youth Work,0.13Music,0.13Marketing,0.13Iberian Languages/Hispanic Studies,0.13"Hospitality, Leisure, Recreation & Tourism",0.13German,0.13French,0.13Fashion,0.13East & South Asian Studies,0.13Dentistry,0.13Criminology,0.13Counselling,0.13Complementary Medicine,0.13American Studies,0.13

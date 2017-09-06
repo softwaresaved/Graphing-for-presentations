@@ -288,8 +288,8 @@ plot_details = {
             'axis_font_size': 14,
             'value_font_size': 20
             },
-    'stability3': {
-            'filename': 'stability3.csv',
+    'open1can': {
+            'filename': 'open1can.csv',
             'plot_type': 'bar',
             'y1_axis': 'percentage',
             'y2_axis': False,
@@ -375,6 +375,23 @@ plot_details = {
              },
     'tool4can': {
             'filename': 'tool4can.csv',
+            'plot_type': 'bar',
+            'y1_axis': 'percentage',
+            'y2_axis': False,
+            'x_title': False,
+            'x_rot': 0,
+            'x_max_len': 15,
+            'y_title': 'Percentage',
+            'chart_title': 'Which languages do you use at work?',
+            'show_values': False,
+            'skip_labels': False,
+            'bottom_size': 0.3,
+            'title_font_size': 24,
+            'axis_font_size': 14,
+            'value_font_size': 20
+             },
+    'tool4canp2': {
+            'filename': 'tool4canp2.csv',
             'plot_type': 'bar',
             'y1_axis': 'percentage',
             'y2_axis': False,
