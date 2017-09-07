@@ -34,7 +34,8 @@ Prepare for running Python:
  
 1. At the top of the lookup are ```global_specs``` that specify the size of the charts, the resolution of the saved charts, and the font used in the charts. Change these to suit your preferences.
 1. ```plot_details``` is set up as a dictionary of dictionaries. It contains all data about the charts you want. It's liable to change, but the current set up is as follows:
- 
+
+```
      '<name of chart>': {
             'filename': 'foo.csv',     # the name of the csv in the data directory
             'plot_type': 'bar',           # currently only does bar charts, but this will change in the future
@@ -52,7 +53,8 @@ Prepare for running Python:
             'axis_font_size': 14,         # Size of axis fonts
             'value_font_size': 20         # Size of value label font
              },
-             
+```
+
 ### Create charts
 
 1. If you want to see the charts as they are created, open ```python graphing.py``` and uncomment the following line:
