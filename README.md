@@ -1,4 +1,4 @@
-# graphing
+# Graphing for presentations
 
 ## Summary
 
