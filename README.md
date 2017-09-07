@@ -61,3 +61,7 @@ Prepare for running Python:
 1. Run the script:
  * ```python graphing.py```
 1. Your charts will appear in the output folder as png files.
+
+### Archiving
+
+Once you're finished, you can archive your files by copying the ```chart_details_lookup.py``` file, and the ```data``` and ```output``` directories into the ```archived_presentations``` directory under an appriately named sub-directory.
