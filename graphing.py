@@ -179,7 +179,14 @@ def plot_line_matplot(df, current_chart):
 
     # Set x and y ticks
     x_tick_values = range(0,len(df))
-    y_tick_values = range(0,int(df[current_plot['y1_axis']].max()),20)
+    y_max = int(df[current_plot['y1_axis']].max())
+    if current_plot.get("flexible_y_tick_interval", False):
+        # Y ticks are spaced by interval that is closest to 1/8 of Ymax
+        y_interval_options = [1, 100, 1000]
+        y_tick_interval = sorted(y_interval_options, key=lambda x: abs(y_max/8-x))[0]
+        y_tick_values = range(0,y_max+y_tick_interval,y_tick_interval)
+    else:
+        y_tick_values = range(0,y_max,20)
 
     if current_plot['skip_labels'] != False:
         count = 0
@@ -210,6 +217,9 @@ def plot_line_matplot(df, current_chart):
     fig.spines['left'].set_visible(False)
     fig.spines['right'].set_visible(False)
     fig.spines['top'].set_visible(False)
+
+    # Turn off spare axis ticks
+    fig.axes.tick_params(top=False, right=False)
 
     # Read in the axis classes that may be used in the following
     # if statements to set axis-related stuff
