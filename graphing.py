@@ -9,6 +9,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.font_manager
 import math
+import argparse
 
 from textwrap import wrap
 
@@ -33,8 +34,10 @@ def import_csv_to_df(filename):
     :params: get an xls file and a sheetname from that file
     :return: a df
     """
-    
-    return pd.read_csv(filename)
+
+    data = pd.read_csv(filename)
+    data.answers = data.answers.map(str)
+    return data
 
 
 def plot_bar_matplot(df, current_chart):
@@ -89,7 +92,16 @@ def plot_bar_matplot(df, current_chart):
     # Add labels to the bars
     if current_plot['show_values'] == True:
         for p in fig.patches:
-            fig.annotate(str(int(round(p.get_height(),0))) + percent_symbol,     # Get the height of the bar and round it to a nice looking value
+            round_dp = current_plot.get('round_dp', 0)  # Allow user to set rounding, assume round to integer
+            if round_dp > 0:
+                label_text = str(round(p.get_height(), round_dp))  # Get the height of the bar and round it to a nice looking value
+            else:
+                label_text = str(int(round(p.get_height(), 0)))    # Get the height of the bar and round it to a nice looking value
+
+            if current_plot.get('y_is_percent', True):  # Assume numbers are percentages unless told otherwise
+                label_text += percent_symbol
+
+            fig.annotate(label_text,
              (p.get_x()+p.get_width()/2, p.get_height()),  # Locate the mid point of the bar and it's height
              ha='center',                                  # Start plotting at the centre of the horizotal coord
              va='center',                                  # ...and the centre of the vertical coord
@@ -111,6 +123,7 @@ def plot_bar_matplot(df, current_chart):
     fig.spines['left'].set_visible(False)
     fig.spines['right'].set_visible(False)
     fig.spines['top'].set_visible(False)
+    fig.axes.tick_params(top=False)
 
     # Read in the axis classes that may be used in the following
     # if statements to set axis-related stuff
@@ -130,11 +143,11 @@ def plot_bar_matplot(df, current_chart):
         fig.set_ylabel(current_plot['y_title'])
 
     # Remove the y-axis stuff
-    y_axe_class.set_visible(False)  
+    y_axe_class.set_visible(False)
 
     # Make gap at bottom bigger for labels
     plt.subplots_adjust(bottom=current_plot['bottom_size'])
-    
+
     # Save the figure
     plt.savefig(STOREFILENAME + current_chart + '.png', format = 'png', dpi = global_specs['dpi'])
 
@@ -155,6 +168,9 @@ def plot_line_matplot(df, current_chart):
     :return: A list of saved charts
     """
 
+    # To cut down on verbosity, rename the look_up dictionary
+    current_plot = plot_details[current_chart]
+
     # Set the labels
     labels = df.index
 
@@ -163,7 +179,14 @@ def plot_line_matplot(df, current_chart):
 
     # Set x and y ticks
     x_tick_values = range(0,len(df))
-    y_tick_values = range(0,int(df[current_plot['y1_axis']].max()),20)
+    y_max = int(df[current_plot['y1_axis']].max())
+    if current_plot.get("flexible_y_tick_interval", False):
+        # Y ticks are spaced by interval that is closest to 1/8 of Ymax
+        y_interval_options = [1, 100, 1000]
+        y_tick_interval = sorted(y_interval_options, key=lambda x: abs(y_max/8-x))[0]
+        y_tick_values = range(0,y_max+y_tick_interval,y_tick_interval)
+    else:
+        y_tick_values = range(0,y_max,20)
 
     if current_plot['skip_labels'] != False:
         count = 0
@@ -178,7 +201,7 @@ def plot_line_matplot(df, current_chart):
                 yticks = y_tick_values,
                 figsize=(global_specs['plot_width'],global_specs['plot_height']))
 
-    fig.line.set_linewidth(8)
+    fig.axes.lines[0].set_linewidth(8)
 
     if current_plot['chart_title'] != False:
         plt.title(current_plot['chart_title'], fontsize=current_plot['title_font_size'], y=1.08)  # y increases the spacing between the title and plot content
@@ -194,6 +217,9 @@ def plot_line_matplot(df, current_chart):
     fig.spines['left'].set_visible(False)
     fig.spines['right'].set_visible(False)
     fig.spines['top'].set_visible(False)
+
+    # Turn off spare axis ticks
+    fig.axes.tick_params(top=False, right=False)
 
     # Read in the axis classes that may be used in the following
     # if statements to set axis-related stuff
@@ -218,21 +244,28 @@ def plot_line_matplot(df, current_chart):
     # Make gap at bottom bigger for labels
     plt.subplots_adjust(bottom=current_plot['bottom_size'])
 
+    # Save the figure
+    plt.savefig(STOREFILENAME + current_chart + '.png', format = 'png', dpi = global_specs['dpi'])
+
     # Show the figure
-    plt.show()
+    # plt.show()
     # Clear figure so that parameters can be set clean by next figure
     plt.clf()
 
     return
 
     
-def main():
+def main(figure=None):
     """
     Main function to run program
     """
+    if figure is not None:
+        subset_plot_details = {figure: plot_details[figure]}
+    else:
+        subset_plot_details = plot_details
     
     # Go through all charts in the lookup table
-    for current_chart in plot_details:
+    for current_chart in subset_plot_details:
         # Read survey data for current chart from csv
         df = import_csv_to_df(DATASTORE + plot_details[current_chart]['filename'])
         # Set the first column as the index
@@ -246,4 +279,9 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description="Simon's plotting script")
+    parser.add_argument("-f", "--figure", type=str, default=None,
+                        help="Optional: Single figure name in chart_details_lookup to plot")
+
+    args = parser.parse_args()
+    main(args.figure)
